@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://canadian-tax-calculator.tabutility.com/sitemap.xml
