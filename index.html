@@ -8,7 +8,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Canadian Tax Calculator 2026 – Federal + Provincial Take-Home Pay | Tabutility</title>
-  <meta name="description" content="Free Canadian income tax calculator for 2024. Federal + provincial tax, CPP, EI, and take-home pay for all provinces and territories." />
+  <meta name="description" content="Canadian employment-income tax estimate for 2026. Basic federal and provincial credits, CPP/CPP2 and EI. Quebec is not supported." />
   <meta name="keywords" content="Canadian tax calculator, Canada income tax 2024, CPP calculator, EI premiums, provincial tax, take home pay Canada" />
   <link rel="canonical" href="https://canadian-tax-calculator.tabutility.com/" />
   
@@ -26,7 +26,7 @@
     .site-nav a:hover{color:#fff;}.nav-brand{color:#fff;font-weight:700;font-size:16px;font-family:'Segoe UI',Arial,sans-serif;}
   </style>
   <meta property="og:title" content="Canadian Tax Calculator 2026 – Federal + Provincial Take-Home Pay | Tabutility"/>
-  <meta property="og:description" content="Free Canadian income tax calculator for 2024. Federal + provincial tax, CPP, EI, and take-home pay for all provinces and territories."/>
+  <meta property="og:description" content="Canadian employment-income tax estimate for 2026. Basic federal and provincial credits, CPP/CPP2 and EI. Quebec is not supported."/>
   <meta property="og:url" content="https://canadian-tax-calculator.tabutility.com/"/>
   <meta property="og:type" content="website"/>
   <meta property="og:site_name" content="Tabutility"/>
@@ -36,7 +36,7 @@
 <meta name="twitter:image" content="https://canadian-tax-calculator.tabutility.com/og-image.png"/>
   <meta name="twitter:card" content="summary_large_image"/>
   <meta name="twitter:title" content="Canadian Tax Calculator 2026 – Federal + Provincial Take-Home Pay | Tabutility"/>
-  <meta name="twitter:description" content="Free Canadian income tax calculator for 2024. Federal + provincial tax, CPP, EI, and take-home pay for all provinces and territories."/>
+  <meta name="twitter:description" content="Canadian employment-income tax estimate for 2026. Basic federal and provincial credits, CPP/CPP2 and EI. Quebec is not supported."/>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Canadian Tax Calculator","description":"Federal + provincial tax, CPP and EI for all 13 provinces — 2026 rates.","url":"https://canadian-tax-calculator.tabutility.com/","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"provider":{"@type":"Organization","name":"Tabutility","url":"https://tabutility.com"}}</script>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>" />
   <link rel="alternate" hreflang="en-CA" href="https://canadian-tax-calculator.tabutility.com/" />
@@ -50,6 +50,7 @@
 nav .brand{color:#fff}
 nav a:hover{color:#818cf8}
 input:focus,select:focus,textarea:focus{border-color:#818cf8!important}
+input[type="number"],select,button{min-height:44px;box-sizing:border-box}
 </style>
 <link rel="dns-prefetch" href="//unpkg.com">
 
@@ -74,51 +75,70 @@ input:focus,select:focus,textarea:focus{border-color:#818cf8!important}
     const PROVINCES = {
       AB: { name: "Alberta", brackets: [{min:0,max:61200,rate:0.08},{min:61200,max:154259,rate:0.10},{min:154259,max:185111,rate:0.12},{min:185111,max:246813,rate:0.13},{min:246813,max:370220,rate:0.14},{min:370220,max:Infinity,rate:0.15}] },
       BC: { name: "British Columbia", brackets: [{min:0,max:50363,rate:0.056},{min:50363,max:100728,rate:0.077},{min:100728,max:115648,rate:0.105},{min:115648,max:140430,rate:0.1229},{min:140430,max:190405,rate:0.147},{min:190405,max:265545,rate:0.168},{min:265545,max:Infinity,rate:0.205}] },
-      MB: { name: "Manitoba", brackets: [{min:0,max:47564,rate:0.108},{min:47564,max:101200,rate:0.1275},{min:101200,max:Infinity,rate:0.174}] },
+      MB: { name: "Manitoba", brackets: [{min:0,max:47000,rate:0.108},{min:47000,max:100000,rate:0.1275},{min:100000,max:Infinity,rate:0.174}] },
       NB: { name: "New Brunswick", brackets: [{min:0,max:52333,rate:0.094},{min:52333,max:104666,rate:0.14},{min:104666,max:193861,rate:0.16},{min:193861,max:Infinity,rate:0.195}] },
       NL: { name: "Newfoundland & Labrador", brackets: [{min:0,max:44678,rate:0.087},{min:44678,max:89354,rate:0.145},{min:89354,max:159528,rate:0.158},{min:159528,max:223340,rate:0.178},{min:223340,max:285319,rate:0.198},{min:285319,max:570638,rate:0.208},{min:570638,max:1141275,rate:0.213},{min:1141275,max:Infinity,rate:0.218}] },
       NS: { name: "Nova Scotia", brackets: [{min:0,max:30995,rate:0.0879},{min:30995,max:61991,rate:0.1495},{min:61991,max:97417,rate:0.1667},{min:97417,max:157124,rate:0.175},{min:157124,max:Infinity,rate:0.21}] },
       NT: { name: "Northwest Territories", brackets: [{min:0,max:53003,rate:0.059},{min:53003,max:106009,rate:0.086},{min:106009,max:172346,rate:0.122},{min:172346,max:Infinity,rate:0.1405}] },
       NU: { name: "Nunavut", brackets: [{min:0,max:55801,rate:0.04},{min:55801,max:111602,rate:0.07},{min:111602,max:181439,rate:0.09},{min:181439,max:Infinity,rate:0.115}] },
       ON: { name: "Ontario", brackets: [{min:0,max:53891,rate:0.0505},{min:53891,max:107785,rate:0.0915},{min:107785,max:150000,rate:0.1116},{min:150000,max:220000,rate:0.1216},{min:220000,max:Infinity,rate:0.1316}] },
-      PE: { name: "Prince Edward Island", brackets: [{min:0,max:33928,rate:0.095},{min:33928,max:65820,rate:0.1347},{min:65820,max:106890,rate:0.166},{min:106890,max:142520,rate:0.1762},{min:142520,max:200000,rate:0.19},{min:200000,max:Infinity,rate:0.20}] },
+      PE: { name: "Prince Edward Island", brackets: [{min:0,max:33928,rate:0.095},{min:33928,max:65820,rate:0.1347},{min:65820,max:106890,rate:0.166},{min:106890,max:142250,rate:0.1762},{min:142250,max:Infinity,rate:0.19}] },
       QC: { name: "Quebec", brackets: [{min:0,max:53810,rate:0.14},{min:53810,max:107780,rate:0.19},{min:107780,max:131230,rate:0.24},{min:131230,max:Infinity,rate:0.2575}] },
       SK: { name: "Saskatchewan", brackets: [{min:0,max:54532,rate:0.105},{min:54532,max:155805,rate:0.125},{min:155805,max:Infinity,rate:0.145}] },
       YT: { name: "Yukon", brackets: [{min:0,max:58523,rate:0.064},{min:58523,max:117045,rate:0.09},{min:117045,max:181440,rate:0.109},{min:181440,max:500000,rate:0.128},{min:500000,max:Infinity,rate:0.15}] },
     };
 
-    const BPA_FEDERAL = 16600; // 2026 Basic Personal Amount (estimated)
+    const BPA_FEDERAL = 16452;
+    const PROVINCIAL_BPA = {AB:22769,BC:13216,MB:15780,NB:13664,NL:11188,NS:11932,NT:18198,NU:19659,ON:12989,PE:15000,SK:20381,YT:16452};
+    const federalBPA = income => BPA_FEDERAL - 1623 * Math.max(0, Math.min(1, (income - 181440) / (258482 - 181440)));
 
     function calcTax(income, brackets, exemption) {
-      const taxableIncome = Math.max(0, income - exemption);
+      const taxableIncome = Math.max(0, income);
       let tax = 0;
       for (const b of brackets) {
         if (taxableIncome <= b.min) break;
         tax += (Math.min(taxableIncome, b.max) - b.min) * b.rate;
       }
-      return tax;
+      return Math.max(0, tax - Math.max(0, exemption || 0) * brackets[0].rate);
     }
 
-    function calcProvincialTax(income, prov) {
-      const taxableIncome = Math.max(0, income - 10000);
-      const brackets = prov.brackets;
-      let tax = 0;
-      for (const b of brackets) {
-        if (taxableIncome <= b.min) break;
-        tax += (Math.min(taxableIncome, b.max) - b.min) * b.rate;
+    function ontarioHealthPremium(income) {
+      if (income <= 20000) return 0;
+      if (income <= 36000) return Math.min(300, (income - 20000) * 0.06);
+      if (income <= 48000) return Math.min(450, 300 + (income - 36000) * 0.06);
+      if (income <= 72000) return Math.min(600, 450 + (income - 48000) * 0.25);
+      if (income <= 200000) return Math.min(750, 600 + (income - 72000) * 0.25);
+      return Math.min(900, 750 + (income - 200000) * 0.25);
+    }
+
+    function calcProvincialTax(income, prov, code, contributionCredits = 0, gross = income) {
+      let allowance = PROVINCIAL_BPA[code];
+      if (code === "MB") allowance *= 1 - Math.max(0, Math.min(1, (income - 200000) / 200000));
+      if (code === "YT") allowance = federalBPA(income);
+      let tax = calcTax(income, prov.brackets, 0);
+      const creditRate = code === "PE" ? 0.0965 : prov.brackets[0].rate;
+      const employmentCredit = code === "YT" ? Math.min(1501, gross) : 0;
+      tax = Math.max(0, tax - (allowance + contributionCredits + employmentCredit) * creditRate);
+      if (code === "ON") {
+        tax += Math.max(0, tax - 5818) * 0.20 + Math.max(0, tax - 7446) * 0.36;
+        tax -= Math.min(tax, Math.max(0, 600 - tax)); // Single adult basic reduction.
+        // Single-adult Low-income Individuals and Families Tax credit.
+        tax = Math.max(0, tax - Math.max(0, 875 - Math.max(0, income - 32500) * 0.05));
+        tax += ontarioHealthPremium(income);
       }
+      if (code === "BC") tax = Math.max(0, tax - Math.max(0, 690 - Math.max(0, income - 25570) * 0.0356));
       return tax;
     }
 
-    // CPP 2026: rate 5.95%, max pensionable ~$73,200, basic exemption $3,500
+    // CRA 2026: CPP including CPP2. Employee, age 18–64, full year.
     function calcCPP(income) {
-      const exemption = 3500, maxPensionable = 73200, rate = 0.0595;
-      return Math.min(Math.max(0, income - exemption), maxPensionable - exemption) * rate;
+      return Math.min(Math.max(0, income - 3500), 71100) * 0.0595
+        + Math.min(Math.max(0, income - 74600), 10400) * 0.04;
     }
 
-    // EI 2026: max insurable ~$67,700, rate 1.64%
+    // CRA 2026, outside Quebec.
     function calcEI(income) {
-      return Math.min(income, 67700) * 0.0164;
+      return Math.min(Math.max(0, income), 68900) * 0.0163;
     }
 
     const fmt = n => "$" + Math.round(n).toLocaleString();
@@ -133,11 +153,16 @@ input:focus,select:focus,textarea:focus{border-color:#818cf8!important}
 
       const calculate = () => {
         const annualIncome = parseFloat(income) || 0;
+        if (!Number.isFinite(annualIncome) || annualIncome < 0) { alert('Enter non-negative annual employment income.'); return; }
+        if (province === "QC") { alert('Quebec QPP, QPIP and abatement are not supported. Use the official Revenu Québec calculator.'); return; }
         const prov = PROVINCES[province];
-        const federalTax = calcTax(annualIncome, FEDERAL_BRACKETS, BPA_FEDERAL);
-        const provincialTax = calcProvincialTax(annualIncome, prov);
         const cpp = calcCPP(annualIncome);
         const ei = calcEI(annualIncome);
+        const cppBase = Math.min(Math.max(0, annualIncome - 3500), 71100) * 0.0495;
+        const enhancedCPP = cpp - cppBase;
+        const taxableIncome = Math.max(0, annualIncome - enhancedCPP);
+        const federalTax = calcTax(taxableIncome, FEDERAL_BRACKETS, federalBPA(taxableIncome) + cppBase + ei + Math.min(1501, annualIncome));
+        const provincialTax = calcProvincialTax(taxableIncome, prov, province, cppBase + ei, annualIncome);
         const totalDeductions = federalTax + provincialTax + cpp + ei;
         const netAnnual = annualIncome - totalDeductions;
         const effectiveRate = annualIncome > 0 ? (federalTax + provincialTax) / annualIncome : 0;
@@ -157,7 +182,8 @@ input:focus,select:focus,textarea:focus{border-color:#818cf8!important}
             <div style={{ textAlign: "center", marginBottom: 32 }}>
               <div style={{ fontSize: 48, marginBottom: 8 }}>🇨🇦</div>
               <h1 style={{ margin: 0, fontSize: 32, fontWeight: 800, color: "#1a1a2e" }}>Canadian Tax Calculator</h1>
-              <p style={{ margin: "8px 0 0", color: "#555", fontSize: 16 }}>Federal + Provincial tax, CPP & EI — 2024 tax year</p>
+              <p style={{ margin: "8px 0 0", color: "#555", fontSize: 16 }}>Federal + Provincial tax, CPP/CPP2 & EI — 2026 annual estimate</p>
+              <p style={{fontSize:13,color:"#555"}}>For a single employee aged 18–64 with employment income only. Includes basic personal and employment credits, CPP/EI credits, enhanced CPP deduction, Ontario surtax/health premium, and basic Ontario/BC reductions. Excludes other provincial low-income reductions, dependants and other deductions. Quebec is unavailable until its separate rules are implemented. Not exact payroll withholding. <a href="https://www.canada.ca/en/revenue-agency/services/e-services/digital-services-businesses/payroll-deductions-online-calculator.html">CRA payroll calculator</a>.</p>
             </div>
 
             <div style={{ background: "#fff", borderRadius: 16, padding: 28, boxShadow: "0 4px 24px rgba(0,0,0,0.08)", marginBottom: 24 }}>
@@ -173,7 +199,7 @@ input:focus,select:focus,textarea:focus{border-color:#818cf8!important}
                   <label style={labelStyle}>Province / Territory</label>
                   <select value={province} onChange={e => setProvince(e.target.value)} style={inputStyle}>
                     {Object.entries(PROVINCES).sort((a,b) => a[1].name.localeCompare(b[1].name)).map(([code, p]) => (
-                      <option key={code} value={code}>{p.name}</option>
+                      <option key={code} value={code} disabled={code === "QC"}>{p.name}{code === "QC" ? " — not supported" : ""}</option>
                     ))}
                   </select>
                 </div>
@@ -207,7 +233,7 @@ input:focus,select:focus,textarea:focus{border-color:#818cf8!important}
                 ))}
               </div>
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginBottom: 24 }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(min(100%,240px),1fr))", gap: 20, marginBottom: 24 }}>
                 <div style={{ background: "#fff", borderRadius: 16, padding: 24, boxShadow: "0 2px 12px rgba(0,0,0,0.06)" }}>
                   <h3 style={{ margin: "0 0 18px", fontSize: 16, fontWeight: 700, color: "#1a1a2e" }}>Annual Breakdown</h3>
                   {[
@@ -241,15 +267,15 @@ input:focus,select:focus,textarea:focus{border-color:#818cf8!important}
                     </div>
                   ))}
                   <div style={{ marginTop: 20, padding: 14, background: "#f0f9ff", borderRadius: 10 }}>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: "#0369a1", marginBottom: 6 }}>2026 Contribution Limits (estimated)</div>
-                    <div style={{ fontSize: 12, color: "#555" }}>CPP max pensionable: ~$73,200 | EI max insurable: ~$67,700</div>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "#0369a1", marginBottom: 6 }}>2026 Contribution Limits</div>
+                    <div style={{ fontSize: 12, color: "#555" }}>CPP: $74,600; CPP2: up to $85,000. EI insurable maximum: $68,900.</div>
                     <div style={{ fontSize: 12, color: "#555", marginTop: 2 }}>Federal BPA: ~$16,600 | RRSP: 18% of prior year income</div>
                   </div>
                 </div>
               </div>
 
               <div style={{ background: "#fff3cd", border: "1px solid #ffc107", borderRadius: 12, padding: 16, fontSize: 13, color: "#664d03" }}>
-                <strong>Estimate only.</strong> Provincial tax uses simplified bracket calculation. Does not include provincial surtaxes (ON, PEI), Quebec Pension Plan differences, or Quebec Parental Insurance Plan (QPIP). Consult the <a href="https://www.canada.ca/en/revenue-agency.html" style={{ color: "#664d03" }}>CRA</a> for precise figures.
+                <strong>Estimate only.</strong> Includes basic credits and Ontario surtax/health premium. Other provincial low-income reductions and personal circumstances can change your result. Quebec is not supported. Consult the <a href="https://www.canada.ca/en/revenue-agency.html" style={{ color: "#664d03" }}>CRA</a> for precise figures.
               </div>
             </>}
 
@@ -274,7 +300,7 @@ input:focus,select:focus,textarea:focus{border-color:#818cf8!important}
                   </tbody>
                 </table>
               </div>
-              <p style={{ margin: "12px 0 0", fontSize: 13, color: "#888" }}>Basic Personal Amount (BPA) of ~$16,600 deducted before federal tax. Plus provincial/territorial tax on top. Source: canada.ca</p>
+              <p style={{ margin: "12px 0 0", fontSize: 13, color: "#888" }}>The federal BPA is a non-refundable credit, not an income deduction: $16,452, tapering to $14,829 at higher incomes. Basic assumptions checked against CRA 2026 tables on 24 November 2026.</p>
             </div>
           </div>
         </div>
@@ -366,7 +392,7 @@ input:focus,select:focus,textarea:focus{border-color:#818cf8!important}
 </script>
 <footer style="background:#1a1a2e;margin-top:48px;padding:28px 24px;text-align:center;font-family:'Segoe UI',system-ui,Arial,sans-serif;font-size:13px;color:#94a3b8;line-height:1.8">
 <div style="font-weight:700;color:#fff;font-size:15px">⚡ Tabutility</div>
-<div>Free, private, browser-based tools. No sign-up, no tracking.</div>
+<div>Free, browser-based tools. No sign-up. Advertising and analytics are explained in our privacy policy.</div>
 <div style="margin-top:6px"><a href="https://tabutility.com" style="color:#818cf8;font-weight:600;text-decoration:none">All Tools</a> · <a href="https://tabutility.com/blog/" style="color:#94a3b8;text-decoration:none">Blog</a> · <a href="https://tabutility.com/about/" style="color:#94a3b8;text-decoration:none">About</a> · <a href="https://tabutility.com/privacy-policy/" style="color:#94a3b8;text-decoration:none">Privacy</a> · <a href="https://tabutility.com/contact/" style="color:#94a3b8;text-decoration:none">Contact</a></div>
 <div style="margin-top:6px;color:#64748b">© 2026 Tabutility</div>
 
@@ -375,17 +401,17 @@ input:focus,select:focus,textarea:focus{border-color:#818cf8!important}
       <h2 style="font-size:2rem;font-weight:700;color:#f1f5f9;margin-bottom:24px;">How to Use the Canadian Tax Calculator</h2>
       <p style="margin-bottom:16px;color:#cbd5e1;">The Canadian Tax Calculator computes federal and provincial income tax, CPP (Canada Pension Plan) contributions, and EI (Employment Insurance) premiums for all 13 provinces and territories for the 2026 tax year. It shows your after-tax take-home pay by pay period.</p>
       <p style="margin-bottom:16px;color:#cbd5e1;">Enter your gross income, province, filing status, and any RRSP contributions. The calculator applies the correct 2026 federal and provincial tax brackets, CPP rates, EI premium rates, and the basic personal amount to show your total deductions and net pay.</p>
-      <p style="margin-bottom:16px;color:#cbd5e1;">A key nuance is that provincial tax rates vary dramatically: for the same $80,000 income, a worker in Quebec (combined rate ~37%) pays significantly more than someone in Alberta (~30%) or Ontario (~32%). Provincial differences in healthcare premiums, surtaxes, and personal amount credits also affect take-home pay.</p>
+      <p style="margin-bottom:16px;color:#cbd5e1;">Provincial differences in income bands, credits, health premiums and surtaxes affect take-home pay. A top marginal tax rate is not the rate paid on all income. Quebec is not supported by this calculator.</p>
 
       <div style="background:#0f172a;border:1px solid #334155;border-radius:12px;padding:28px;margin:32px 0;">
         <h3 style="font-size:1.2rem;font-weight:600;color:#f1f5f9;margin-bottom:16px;">📊 Worked Example</h3>
         <p style="color:#94a3b8;margin:0 0 12px;">$80,000 gross income in Ontario, 2026:</p>
         <ul style="list-style:none;padding:0;margin:0;color:#cbd5e1;">
-          <li style="padding:6px 0;border-bottom:1px solid #1e293b;">Federal income tax: <strong style="color:#f87171;">$12,516</strong></li>
-          <li style="padding:6px 0;border-bottom:1px solid #1e293b;">Ontario provincial tax: <strong style="color:#f87171;">$5,198</strong></li>
-          <li style="padding:6px 0;border-bottom:1px solid #1e293b;">CPP contributions: <strong style="color:#f87171;">$3,867</strong></li>
-          <li style="padding:6px 0;border-bottom:1px solid #1e293b;">EI premiums: <strong style="color:#f87171;">$1,049</strong></li>
-          <li style="padding:6px 0;">Take-home: <strong style="color:#34d399;">$57,370 (~72%)</strong></li>
+          <li style="padding:6px 0;border-bottom:1px solid #1e293b;">Federal income tax: <strong style="color:#f87171;">$9,242.60</strong></li>
+          <li style="padding:6px 0;border-bottom:1px solid #1e293b;">Ontario provincial tax including health premium: <strong style="color:#f87171;">$4,885.26</strong></li>
+          <li style="padding:6px 0;border-bottom:1px solid #1e293b;">CPP and CPP2 contributions: <strong style="color:#f87171;">$4,446.45</strong></li>
+          <li style="padding:6px 0;border-bottom:1px solid #1e293b;">EI premiums: <strong style="color:#f87171;">$1,123.07</strong></li>
+          <li style="padding:6px 0;">Take-home: <strong style="color:#34d399;">$60,302.63 (75.4%)</strong></li>
         </ul>
       </div>
 
@@ -402,7 +428,7 @@ input:focus,select:focus,textarea:focus{border-color:#818cf8!important}
       <h3 style="font-size:1.4rem;font-weight:600;color:#f1f5f9;margin:32px 0 24px;">Frequently Asked Questions</h3>
       <div style="margin-bottom:24px;">
         <h4 style="font-size:1rem;font-weight:600;color:#f1f5f9;margin-bottom:8px;">What are the Canadian federal income tax brackets for 2026?</h4>
-        <p style="color:#cbd5e1;margin:0;">Federal tax rates (projected 2026 with inflation adjustments): 15% on the first ~$57,375, 20.5% on ~$57,376–$114,750, 26% on ~$114,751–$158,519, 29% on ~$158,520–$220,000, and 33% on income above $220,000. These are marginal rates — only the income in each bracket is taxed at that rate.</p>
+        <p style="color:#cbd5e1;margin:0;">The 2026 federal rates used here are 14% to $58,523, 20.5% from $58,523 to $117,045, 26% to $181,440, 29% to $258,482, and 33% above $258,482. These are marginal bands before non-refundable tax credits, not a flat rate on all income.</p>
       </div>
       <div style="margin-bottom:24px;">
         <h4 style="font-size:1rem;font-weight:600;color:#f1f5f9;margin-bottom:8px;">What is the CPP contribution for 2026?</h4>
